@@ -43,6 +43,10 @@ promise.then((data) => {
             itemDescription.setAttribute('class', 'productDescription');
             itemDescription.textContent = item.description;
 
+            const id = item._id;
+            
+            itemLink.href = `./product.html?id=${id}`;
+
         }
     }
 );
