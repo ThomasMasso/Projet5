@@ -1,7 +1,7 @@
 const params = (new URL(document.location)).searchParams;
 const id = params.get("id");
-//console.log(id);
 
+// récupération data selon url choisie (appel classique Fetch API)
 async function fetchItems(URL) {
     try {
       const response = await fetch(URL);
@@ -44,10 +44,7 @@ promise.then((data) => {
     }
 
 });
-
-
-    
-    
+   
 const button = document.querySelector('#addToCart');
     button.addEventListener('click', () => {
 
@@ -66,10 +63,12 @@ const button = document.querySelector('#addToCart');
         
     })
 
+// envoi du panier dans localStorage avec sérialisation
 function saveBasket(basket) {
     localStorage.setItem('basket', JSON.stringify(basket));
 }
 
+// récupération du panier - si panier vide création du tableau regroupant les produits sinon désérialisation
 function getBasket() {
     let basket = localStorage.getItem('basket');
     if (basket == null) {
@@ -79,6 +78,7 @@ function getBasket() {
     }
 }
 
+// ajout du produit dans le panier en ne créant pas de doublons (quantité additionnée si produit sélec est déjà dans panier même id, même color)
 function addBasket(product) {
     let basket = getBasket();
     let foundProduct = basket.find(p => p.id === product.id && p.color === product.color);
