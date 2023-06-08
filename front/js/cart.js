@@ -1,5 +1,5 @@
 const cart = JSON.parse(localStorage.getItem('cart'));
-console.log(cart)
+//console.log(cart)
 
 async function fetchItems(URL) {
     try {
@@ -19,6 +19,8 @@ for (let product of cart) {
     const promise = fetchItems(`http://localhost:3000/api/products/${id}`);
     promise.then((data) => {
         //console.log(data);
+
+        //création article
         const cartItems = document.querySelector('#cart__items');
         const cartItem = document.createElement('article')
         cartItem.setAttribute('class', 'cart__item');
@@ -26,6 +28,7 @@ for (let product of cart) {
         cartItem.setAttribute('data-color', `${product.color}`);
         cartItems.appendChild(cartItem);
 
+        //création 1ère div dans article - image
         const cartItemImgContainer = document.createElement('div');
         cartItemImgContainer.setAttribute('class', 'cart__item__img');
         const cartItemImg = document.createElement('img');
@@ -34,6 +37,56 @@ for (let product of cart) {
         cartItemImgContainer.appendChild(cartItemImg);
         cartItem.appendChild(cartItemImgContainer);
 
+        // création 2eme div dans article - content
+        const cartItemContent = document.createElement('div');
+        cartItemContent.setAttribute('class', 'cart__item__content');
+        cartItem.appendChild(cartItemContent);
+
+        // création div content-description
+        const cartItemContentDescription = document.createElement('div');
+        cartItemContentDescription.setAttribute('class', 'cart__item__content__description');
+        cartItemContent.appendChild(cartItemContentDescription);
+
+        const itemTitre = document.createElement('h2');
+        itemTitre.textContent = data.name;
+        const itemColor = document.createElement('p');
+        itemColor.textContent = product.color;
+        const itemPrice = document.createElement('p');
+        itemPrice.textContent = data.price + ' €';
+        cartItemContentDescription.appendChild(itemTitre);
+        cartItemContentDescription.appendChild(itemColor);
+        cartItemContentDescription.appendChild(itemPrice);
+
+        //creation div content-settings
+        const cartItemContentSettings = document.createElement('div');
+        cartItemContentSettings.setAttribute('class', 'cart__item__content__settings');
+        cartItemContent.appendChild(cartItemContentSettings);
+
+        const cartItemContentSettingsQuantity = document.createElement('div');
+        cartItemContentSettingsQuantity.setAttribute('class', 'cart__item__content__settings__quantity');
+        cartItemContentSettings.appendChild(cartItemContentSettingsQuantity);
+
+        const itemQuantity = document.createElement('p');
+        itemQuantity.textContent = `Qté :`;
+        const itemQuantityInput = document.createElement('input');
+        itemQuantityInput.setAttribute('type', 'number');
+        itemQuantityInput.setAttribute('class', 'itemQuantity');
+        itemQuantityInput.setAttribute('name', 'itemQuantity');
+        itemQuantityInput.setAttribute('min', '1');
+        itemQuantityInput.setAttribute('max', '100');
+        itemQuantityInput.setAttribute('value', `${product.quantity}`);
+
+        cartItemContentSettingsQuantity.appendChild(itemQuantity);
+        cartItemContentSettingsQuantity.appendChild(itemQuantityInput);
+
+        const cartItemContentSettingsDelete = document.createElement('div');
+        cartItemContentSettingsDelete.setAttribute('class', 'cart__item__content__settings__delete');
+        cartItemContentSettings.appendChild(cartItemContentSettingsDelete);
+
+        const itemDelete = document.createElement('p');
+        itemDelete.setAttribute('class', 'deleteItem');
+        itemDelete.textContent = 'Supprimer';
+        cartItemContentSettingsDelete.appendChild(itemDelete)
     })
     
 }
