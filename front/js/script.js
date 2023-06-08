@@ -1,7 +1,6 @@
 async function fetchItems(URL) {
     try {
       const response = await fetch(URL);
-
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }

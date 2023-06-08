@@ -1,11 +1,10 @@
-let params = (new URL(document.location)).searchParams;
-let id = params.get("id");
+const params = (new URL(document.location)).searchParams;
+const id = params.get("id");
 //console.log(id);
 
 async function fetchItems(URL) {
     try {
       const response = await fetch(URL);
-
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }
@@ -37,9 +36,8 @@ promise.then((data) => {
     itemDescription.textContent = data.description;
 
     for (const color of data.colors) {
-
         const itemColorsContainer = document.querySelector('#colors');
-        const itemColors = document.createElement('option');
+        let itemColors = document.createElement('option');
         itemColors.value = color;
         itemColors.textContent = color;
         itemColorsContainer.appendChild(itemColors);
@@ -47,7 +45,49 @@ promise.then((data) => {
 
 });
 
+
+    
+    
 const button = document.querySelector('#addToCart');
-button.addEventListener('click', (e) => {
-    e.preventDefault();
-})
+    button.addEventListener('click', () => {
+
+        const itemColorChoose = document.querySelector('#colors').value;
+        const itemQuantityChoose = Number(document.querySelector('#quantity').value);
+
+        if (itemColorChoose != '' && itemQuantityChoose >=1){
+            const itemAddBasket = {
+                'id': id,
+                'color': itemColorChoose,
+                'quantity': itemQuantityChoose
+            };
+    
+            addBasket(itemAddBasket);
+        }
+        
+    })
+
+function saveBasket(basket) {
+    localStorage.setItem('basket', JSON.stringify(basket));
+}
+
+function getBasket() {
+    let basket = localStorage.getItem('basket');
+    if (basket == null) {
+        return [];
+    } else {
+        return JSON.parse(basket);
+    }
+}
+
+function addBasket(product) {
+    let basket = getBasket();
+    let foundProduct = basket.find(p => p.id === product.id && p.color === product.color);
+    if (foundProduct != undefined) {
+        foundProduct.quantity += product.quantity;
+    } else {
+        product.quantity = product.quantity;
+        basket.push(product);
+    }
+    saveBasket(basket);
+}
+
