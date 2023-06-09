@@ -1,5 +1,8 @@
-const cart = JSON.parse(localStorage.getItem('cart'));
+//const cart = JSON.parse(localStorage.getItem('cart'));
 //console.log(cart)
+
+const cart = getCart();
+let total = 0;
 
 async function fetchItems(URL) {
     try {
@@ -19,7 +22,7 @@ for (let product of cart) {
     const promise = fetchItems(`http://localhost:3000/api/products/${id}`);
     promise.then((data) => {
         //console.log(data);
-
+        
         //création article
         const cartItems = document.querySelector('#cart__items');
         const cartItem = document.createElement('article')
@@ -86,7 +89,52 @@ for (let product of cart) {
         const itemDelete = document.createElement('p');
         itemDelete.setAttribute('class', 'deleteItem');
         itemDelete.textContent = 'Supprimer';
-        cartItemContentSettingsDelete.appendChild(itemDelete)
+        cartItemContentSettingsDelete.appendChild(itemDelete);
+        
+        totalPriceProducts(product, data);
+        
     })
-    
+}
+
+totalQuantityProducts();
+
+// calcul du prix total des produits, fonction appelée dans requete fetch pour recup prix via API fetch
+function totalPriceProducts(product, data) {
+    total += product.quantity * data.price;
+    const totalPrice = document.querySelector('#totalPrice');
+    totalPrice.textContent = total;
+    return total;
+}
+
+//calcul du nombre de produits totaux
+function totalQuantityProducts() {
+    let cart = getCart();
+    let number = 0;
+    for (let product of cart) {
+        number += product.quantity
+    }
+    const totalQuantity = document.querySelector('#totalQuantity');
+    totalQuantity.textContent = number;
+    return number;
+}
+
+// accéder à data-id = dataId en JS
+
+function saveCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function getCart() {
+    let cart = localStorage.getItem('cart');
+    if (cart == null) {
+        return [];
+    } else {
+        return JSON.parse(cart);
+    }
+}
+
+function removeFromCart(product) {
+    let cart = getCart();
+    cart = cart.filter(p => p.id != product.id);
+    saveCart(cart);
 }
