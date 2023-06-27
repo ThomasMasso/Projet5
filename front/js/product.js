@@ -60,6 +60,7 @@ const button = document.querySelector('#addToCart');
     
             addCart(itemAddCart);
         }
+    alert('Produit ajouté au panier')
         
     })
 
