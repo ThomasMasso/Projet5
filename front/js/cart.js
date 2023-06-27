@@ -385,3 +385,130 @@ function supprimerProduit() {
 }
 
 //prévoir message ajout produit panier et produit supprimer panier
+
+
+
+/************REGEX ************************/
+
+let form = document.querySelector('.cart__order__form');
+//console.log(form.email);
+
+// ecoute modification firstName
+form.firstName.addEventListener('change', function() {
+    validName(this);
+});
+
+// ecoute modification lastName
+form.lastName.addEventListener('change', function() {
+    validName(this);
+});
+
+// ecoute modification address
+form.address.addEventListener('change', function() {
+    validAdress(this);
+});
+
+// ecoute modification address
+form.city.addEventListener('change', function() {
+    validCity(this);
+});
+
+// ecouter la modification de l'email
+form.email.addEventListener('change', function() {
+    validEmail(this);
+});
+
+// ecoute soumission formulaire
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (validName(form.firstName) && validName(form.lastName) && validAdress(form.address) && validCity(form.city) && validEmail(form.email)) {
+        // récupération du localStorage
+        let cart = getCart();
+        if (cart !== null) {
+            let products = [];
+            for (let product of cart) {
+                products.push(product.id)
+            }
+            //console.log(products)
+            let contact = {
+                'firstName' : form.firstName.value,
+                'lastName' : form.lastName.value,
+                'address' : form.address.value,
+                'city' : form.city.value,
+                'email' : form.email.value
+            }
+            //console.log(contact)
+        } else {
+            alert('Ajoutez un ou des produits au panier');
+        }
+    }
+});
+
+function validName(input) {
+    // creation de la regExp pour validation identité
+    let namesRegExp = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/gims;
+    let message = input.nextElementSibling;
+
+    if (namesRegExp.test(input.value)) {
+        message.textContent = '';
+        return true;
+    } else {
+        message.textContent = 'Champ invalide - caractère(s) non autorisé(s)';
+        return false;
+    }
+}
+
+function validAdress(input) {
+    // creation de la regExp pour validation identité
+    let adressRegExp = /((^[0-9]*).?((BIS)|(TER)|(QUATER))?)?((\W+)|(^))(([a-z]+.)*)([0-9]{5})?.(([a-z\'']+.)*)$/gm;
+
+    let message = input.nextElementSibling;
+
+    if (adressRegExp.test(input.value)) {
+        message.textContent = '';
+        return true;
+    } else {
+        message.textContent = `L'adresse postale saisie est invalide`;
+        return false;
+    }
+}
+
+function validCity(input) {
+    // creation de la regExp pour validation identité
+    let cityRegExp = /^[A-Za-z\é\è\ê\ù\à\ç\-]+$/gm;
+
+    let message = input.nextElementSibling;
+
+    if (cityRegExp.test(input.value)) {
+        message.textContent = '';
+        return true;
+    } else {
+        message.textContent = `Le nom de ville saisi est invalide`;
+        return false;
+    }
+}
+
+function validEmail(input) {
+    //création de la regExp pour validation email
+    let emailRegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
+    // recuperation de la balise message d'erreur
+    let message = input.nextElementSibling;
+
+    //on teste l'expression reguliere
+    if (emailRegExp.test(input.value)) {
+        message.textContent = '';
+        return true;
+    } else {
+        message.textContent = `L’adresse email saisie est invalide.`;
+        return false;
+    }
+};
+
+
+
+
+
+
+// objet contact, tableau produits et orderId (id de commande);
