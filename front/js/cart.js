@@ -22,7 +22,7 @@ function getArticle(id) {
     return fetch(`http://localhost:3000/api/products/${id}`)
         .then((reponseHttp) => reponseHttp.json())
         .then((article) =>  article)
-        .catch((error) => console.error(`Could not get products: ${error}`))
+        .catch((error) => console.error(`Could not get article: ${error}`))
 }
 
 //affichage des produits dans la page panier
