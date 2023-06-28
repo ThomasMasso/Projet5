@@ -161,8 +161,26 @@ function changerQuantiteProduit() {
             
             // si le produit est trouvé alors je change sa quantité par la nouvelle rentrée par utilisateur
             if (foundProduct != undefined) {
+
+                // je récupère la quantité rentrée par l'utilisateur
                 foundProduct.quantity = e.target.value;
+
+                // si la quantité rentrée manuellement est inférieure ou égale à 0, je mets 1 en quantité et lui indique de supprimer le produit à l'aide du bouton prévu
+                if (foundProduct.quantity <= 0) {
+
+                    alert('Quantité minimale de commande pour ce produit : 1. Pour supprimer le produit appuyer sur le bouton supprimer');
+                    foundProduct.quantity = 1;
+
+                // si la quantité est sup. à 100, j'indiquer à l'utilisateur que la quantité max est de 100
+                } else if (foundProduct.quantity > 100) {
+
+                    alert('Quantité maximale de commande pour ce produit : 100');
+                    foundProduct.quantity = 100;
+                }
+            
             }
+
+            // je sauvegarde les nouvelles infos dans le localStorage
             saveCart(cart);
             
             // je refresh la page pour appliquer modifications
@@ -378,4 +396,4 @@ function validEmail(input) {
         message.textContent = `L’adresse email saisie est invalide.`;
         return false;
     }
-};
+}
