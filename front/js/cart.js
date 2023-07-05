@@ -3,24 +3,21 @@ let total = 0;
 
 //trier les produits par id
 const articleOrdonnes = Array.from(getCart());
-//articleOrdonnes.id.sort(function(a, b){return a-b})
+
 function dynamicSort(property) {
     return function(a, b) {
         return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
     }
 }
 articleOrdonnes.sort(dynamicSort('id'))
-console.log(articleOrdonnes)
 //
 
 main();
 // fonction s'appelant dès le lancement de la page
 async function main() {
     
-    const cart = getCart();
-    
     // récupération des articles dans localStorage
-    for (let product of cart) {
+    for (let product of articleOrdonnes) {
 
         const idProduct = product.id;
         const article = await getArticle(idProduct);
@@ -28,8 +25,8 @@ async function main() {
         
     }
 
-    changerQuantiteProduit();
-    supprimerProduit();
+    changingQuantityProduct();
+    deleteProduct();
 }
 
 
@@ -163,7 +160,7 @@ function saveCart(cart) {
 }
 
 // changement de la quantité d'un produit
-function changerQuantiteProduit() {
+function changingQuantityProduct() {
     // je sélectionne et stocke tous mes input contenant la quantité du produit
     const productsElements = document.querySelectorAll('input.itemQuantity');
     
@@ -216,7 +213,7 @@ function changerQuantiteProduit() {
 }
 
 //fonction permettant de supprimer un produit
-function supprimerProduit() {
+function deleteProduct() {
 
     // je selectionne et stocke tous les boutons supprimer
     const productsElements = document.querySelectorAll('.deleteItem');
@@ -320,11 +317,11 @@ form.addEventListener('submit', function(e) {
             };
             
             //création de l'en-tête de la requête POST
-            const chargeUtile = JSON.stringify(order);
+            const formData = JSON.stringify(order);
             fetch('http://localhost:3000/api/products/order', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
-                body: chargeUtile
+                body: formData
             })
             .then((reponseHttp) => reponseHttp.json())
             .then((data) => {
