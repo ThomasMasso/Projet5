@@ -13,9 +13,14 @@ async function main() {
 //création de la fonction de récupération du produit via fetchApi
 function getArticle() {
     return fetch(`http://localhost:3000/api/products/${id}`)
-    .then((reponseHttp) => reponseHttp.json())
+    .then((reponseHttp) => {
+        if (!reponseHttp.ok) {
+            throw new Error(`Erreur HTTP : ${reponse.status}`);
+        }
+        return reponseHttp.json()
+    })
     .then((article) => article)
-    .catch((error) => console.error(`Could not get article: ${error}`))
+    .catch(() => document.location = `./index.html`)
 }
 
 // création de la fonction d'affichage du produit

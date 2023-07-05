@@ -9,9 +9,20 @@ async function main() {
 //création de la fonction de récupération du produit via fetchApi
 function getArticles() {
     return fetch(`http://localhost:3000/api/products/`)
-    .then((reponseHttp) => reponseHttp.json())
-    .then((articles) => articles)
-    .catch((error) => console.error(`Could not get articles: ${error}`))
+    .then((reponseHttp) => {
+      if (!reponseHttp.ok) {
+          throw new Error(`Erreur HTTP : ${reponse.status}`);
+      }
+      return reponseHttp.json()
+  })
+  .then((articles) => articles)
+  .catch(() => {
+    let titleh1 = document.querySelector('h1');
+    let titleh2 = document.querySelector('h2');
+    titleh1.textContent = 'Le site est actuellement inaccessible';
+    titleh2.textContent = '';
+    
+  })
 }
 
 // création de la fonction d'affichage des produits

@@ -1,17 +1,33 @@
 // initialisation variable total pour le calcul du prix total
 let total = 0;
 
+//trier les produits par id
+const articleOrdonnes = Array.from(getCart());
+//articleOrdonnes.id.sort(function(a, b){return a-b})
+function dynamicSort(property) {
+    return function(a, b) {
+        return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    }
+}
+articleOrdonnes.sort(dynamicSort('id'))
+console.log(articleOrdonnes)
+//
+
 main();
 // fonction s'appelant dès le lancement de la page
 async function main() {
+    
     const cart = getCart();
+    
     // récupération des articles dans localStorage
     for (let product of cart) {
+
         const idProduct = product.id;
         const article = await getArticle(idProduct);
         displayArticle(article, product);
         
     }
+
     changerQuantiteProduit();
     supprimerProduit();
 }
@@ -20,9 +36,19 @@ async function main() {
 // récupération d'un article via fetchApi en utilisant son id
 function getArticle(id) {
     return fetch(`http://localhost:3000/api/products/${id}`)
-        .then((reponseHttp) => reponseHttp.json())
-        .then((article) =>  article)
-        .catch((error) => console.error(`Could not get article: ${error}`))
+    .then((reponseHttp) => {
+        if (!reponseHttp.ok) {
+            throw new Error(`Erreur HTTP : ${reponse.status}`);
+        }
+        return reponseHttp.json()
+    })
+    .then((article) => article)
+    .catch(() => {
+        let titleh1 = document.querySelector('h1');
+        titleh1.textContent = `Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.`;
+        let sectionCart = document.querySelector('.cart');
+        sectionCart.textContent = '';
+    })
 }
 
 //affichage des produits dans la page panier
@@ -188,10 +214,6 @@ function changerQuantiteProduit() {
         })
     }
 }
-/*****************************************************
-// prévoir si quantité inférieure ou égale à 0
-// prévoir si quantité supp à 100
-*///////////////////////////////////////////////////
 
 //fonction permettant de supprimer un produit
 function supprimerProduit() {
@@ -223,9 +245,6 @@ function supprimerProduit() {
             // je sauvegarde le localStorage
             saveCart(cart);
 
-            // je préviens l'utilisateur que son produit sera supprimé du panier
-            alert('Produit supprimé du panier')
-
             // je refresh la page pour appliquer modifications
             location.reload();
         })
@@ -256,7 +275,7 @@ form.address.addEventListener('change', function() {
 
 // ecoute modification sur 'city' dans mon form sélectionné
 form.city.addEventListener('change', function() {
-    validCity(this);
+    validName(this);
 });
 
 // ecoute modification sur 'email' dans mon form sélectionné
@@ -269,7 +288,7 @@ form.addEventListener('submit', function(e) {
     e.preventDefault();
 
     //si tous les chanmps sont valide
-    if (validName(form.firstName) && validName(form.lastName) && validAdress(form.address) && validCity(form.city) && validEmail(form.email)) {
+    if (validName(form.firstName) && validName(form.lastName) && validAdress(form.address) && validEmail(form.email)) {
         
         // récupération du localStorage
         let cart = getCart();
@@ -307,17 +326,13 @@ form.addEventListener('submit', function(e) {
                 headers: { "Content-Type": "application/json" },
                 body: chargeUtile
             })
-            .then(res => res.json())
+            .then((reponseHttp) => reponseHttp.json())
             .then((data) => {
-               
                 // récupération du numéro de commande
                const idConfirmation = data.orderId;
 
                // utilisation de ne numéro sous forme d'id pour l'envoyer via searchParams
                document.location = `confirmation.html?id=${idConfirmation}`;
-            })
-            .catch(function(error) {
-               console.log(error.message);
             })
 
         } else {
@@ -329,7 +344,7 @@ form.addEventListener('submit', function(e) {
 // création de la fonction utilisant les regExp pour valider la saisie des champs firstName et lastName
 function validName(input) {
     // creation de la regExp pour validation identité
-    let namesRegExp = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/gims;
+    let namesRegExp = /^(?=.{1,50}$)[A-Za-z\é\è\ê\ù\à\ç\-]+(?:['_.\s][a-z]+)*$/gims;
 
     // recuperation de la balise message d'erreur
     let message = input.nextElementSibling;
@@ -363,22 +378,22 @@ function validAdress(input) {
 }
 
 // création de la fonction utilisant les regExp pour valider la saisie du champ ville (en français)
-function validCity(input) {
-    // creation de la regExp pour validation identité
-    let cityRegExp = /^[A-Za-z\é\è\ê\ù\à\ç\-]+$/gm;
+// function validCity(input) {
+//     // creation de la regExp pour validation identité
+//     let cityRegExp = /^[A-Za-z\é\è\ê\ù\à\ç\-]+$/gm;
 
-    // recuperation de la balise message d'erreur
-    let message = input.nextElementSibling;
+//     // recuperation de la balise message d'erreur
+//     let message = input.nextElementSibling;
     
-    //on teste l'expression reguliere
-    if (cityRegExp.test(input.value)) {
-        message.textContent = '';
-        return true;
-    } else {
-        message.textContent = `Le nom de ville saisi est invalide`;
-        return false;
-    }
-}
+//     //on teste l'expression reguliere
+//     if (cityRegExp.test(input.value)) {
+//         message.textContent = '';
+//         return true;
+//     } else {
+//         message.textContent = `Le nom de ville saisi est invalide`;
+//         return false;
+//     }
+// }
 
 // création de la fonction utilisant les regExp pour valider la saisie du champ email
 function validEmail(input) {
