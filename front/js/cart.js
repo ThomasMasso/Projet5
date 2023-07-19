@@ -4,13 +4,14 @@ let total = 0;
 //trier les produits par id
 const articleOrdonnes = Array.from(getCart());
 
+// trier par ordre croissant
 function dynamicSort(property) {
     return function(a, b) {
         return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
     }
 }
 articleOrdonnes.sort(dynamicSort('id'))
-//
+//console.log(articleOrdonnes)
 
 main();
 // fonction s'appelant dès le lancement de la page
@@ -29,8 +30,11 @@ async function main() {
     deleteProduct();
 }
 
-
-// récupération d'un article via fetchApi en utilisant son id
+/**
+ * récupération d'un article via fetchApi en utilisant son id
+ * @param {string} id 
+ * @returns {object}
+ */
 function getArticle(id) {
     return fetch(`http://localhost:3000/api/products/${id}`)
     .then((reponseHttp) => {
@@ -48,7 +52,11 @@ function getArticle(id) {
     })
 }
 
-//affichage des produits dans la page panier
+/**
+ * affichage des produits dans la page panier
+ * @param {object} article // infos provenant de la requête Fetch (id, name, price, description, url image, altTxt)
+ * @param {object} product // infos provenant du panier (id, color, quantity)
+ */
 function displayArticle(article, product) {
     //création container 'article'
     const cartItems = document.querySelector('#cart__items');
@@ -146,7 +154,11 @@ function totalQuantityProducts() {
     totalQuantity.textContent = number;
 }
 
-// calcul du prix total
+/**
+ * calcul du prix total
+ * @param {object} article // info provenant de la requête Fetch (price)
+ * @param {object} product // info provenant du panier (quantity)
+ */
 function totalPriceProducts(article, product) {
     total += product.quantity * article.price;
     const totalPrice = document.querySelector('#totalPrice');
@@ -154,7 +166,10 @@ function totalPriceProducts(article, product) {
     return total;
 }
 
-// sauvegarde du localStorage via stringify
+/**
+ * sauvegarde du localStorage via stringify
+ * @param {object[]} cart 
+ */
 function saveCart(cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
@@ -338,7 +353,11 @@ form.addEventListener('submit', function(e) {
     }
 });
 
-// création de la fonction utilisant les regExp pour valider la saisie des champs firstName et lastName
+/**
+ * création de la fonction utilisant les regExp pour valider la saisie des champs firstName et lastName
+ * @param {string} input 
+ * @returns {boolean}
+ */ 
 function validName(input) {
     // creation de la regExp pour validation identité
     let namesRegExp = /^(?=.{1,50}$)[A-Za-z\é\è\ê\ù\à\ç\-]+(?:['_.\s][a-z]+)*$/gims;
@@ -356,7 +375,11 @@ function validName(input) {
     }
 }
 
-// création de la fonction utilisant les regExp pour valider la saisie du champ address
+/**
+ * création de la fonction utilisant les regExp pour valider la saisie du champ address
+ * @param {string} input 
+ * @returns {boolean}
+ */ 
 function validAdress(input) {
     // creation de la regExp pour validation identité
     let adressRegExp = /((^[0-9]*).?((BIS)|(TER)|(QUATER))?)?((\W+)|(^))(([a-z]+.)*)([0-9]{5})?.(([a-z\'']+.)*)$/gm;
@@ -374,25 +397,11 @@ function validAdress(input) {
     }
 }
 
-// création de la fonction utilisant les regExp pour valider la saisie du champ ville (en français)
-// function validCity(input) {
-//     // creation de la regExp pour validation identité
-//     let cityRegExp = /^[A-Za-z\é\è\ê\ù\à\ç\-]+$/gm;
-
-//     // recuperation de la balise message d'erreur
-//     let message = input.nextElementSibling;
-    
-//     //on teste l'expression reguliere
-//     if (cityRegExp.test(input.value)) {
-//         message.textContent = '';
-//         return true;
-//     } else {
-//         message.textContent = `Le nom de ville saisi est invalide`;
-//         return false;
-//     }
-// }
-
-// création de la fonction utilisant les regExp pour valider la saisie du champ email
+/**
+ * création de la fonction utilisant les regExp pour valider la saisie du champ email
+ * @param {string} input 
+ * @returns {boolean}
+ */
 function validEmail(input) {
     //création de la regExp pour validation email
     let emailRegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;

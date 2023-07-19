@@ -25,7 +25,10 @@ function getArticles() {
   })
 }
 
-// création de la fonction d'affichage des produits
+/**
+ * affichage des produits sur la page index
+ * @param {object[]} articles 
+ */
 function displayArticles(articles) {
   
   // récupération de tous les articles de l'api

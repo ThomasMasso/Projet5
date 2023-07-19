@@ -23,7 +23,10 @@ function getArticle() {
     .catch(() => document.location = `./index.html`)
 }
 
-// création de la fonction d'affichage du produit
+/**
+ * affichage du produit sur la page produit
+ * @param {object} article
+ */
 function displayArticle(article) {
 
     // création container image
@@ -92,7 +95,10 @@ const button = document.querySelector('#addToCart');
         
     })
 
-// envoi du panier dans localStorage avec sérialisation
+/**
+ * envoi du panier dans localStorage avec sérialisation
+ * @param {object[]} cart 
+ */
 function saveCart(cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
@@ -107,7 +113,10 @@ function getCart() {
     }
 }
 
-// ajout du produit dans le panier en ne créant pas de doublons (quantité additionnée si produit sélec est déjà dans panier même id, même color)
+/**
+ * ajout du produit dans le panier en ne créant pas de doublons (quantité additionnée si produit sélec est déjà dans panier même id, même color)
+ * @param {object} product 
+ */
 function addCart(product) {
     let cart = getCart();
     let foundProduct = cart.find(p => p.id === product.id && p.color === product.color);
