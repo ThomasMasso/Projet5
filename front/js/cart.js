@@ -304,7 +304,7 @@ form.addEventListener('submit', function(e) {
         
         // récupération du localStorage
         let cart = getCart();
-        if (cart !== null) {
+        if (cart.length !== 0) {
 
             // on créé le tableau contenant les product-ID
             let products = [];
@@ -360,7 +360,8 @@ form.addEventListener('submit', function(e) {
  */ 
 function validName(input) {
     // creation de la regExp pour validation identité
-    let namesRegExp = /^(?=.{1,50}$)[A-Za-z\é\è\ê\ù\à\ç\-]+(?:['_.\s][a-z]+)*$/gims;
+    let namesRegExp = /^[a-z]{1,20}[-]?[ a-z]{1,20}$/gi;
+    
 
     // recuperation de la balise message d'erreur
     let message = input.nextElementSibling;
@@ -382,7 +383,7 @@ function validName(input) {
  */ 
 function validAdress(input) {
     // creation de la regExp pour validation identité
-    let adressRegExp = /((^[0-9]*).?((BIS)|(TER)|(QUATER))?)?((\W+)|(^))(([a-z]+.)*)([0-9]{5})?.(([a-z\'']+.)*)$/gm;
+    let adressRegExp = /^[0-9]{1,5}[ ]?[(BIS)|(TER)|(QUATER)]{1}?[ a-z]{1,40}$/gi;
 
     // recuperation de la balise message d'erreur
     let message = input.nextElementSibling;
@@ -404,7 +405,7 @@ function validAdress(input) {
  */
 function validEmail(input) {
     //création de la regExp pour validation email
-    let emailRegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    let emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; //https://www.w3resource.com/javascript/form/email-validation.php
 
     // recuperation de la balise message d'erreur
     let message = input.nextElementSibling;
